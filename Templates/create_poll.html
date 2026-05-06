@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulseVote — Créer un sondage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D0D0F;
+    --bg2: #141416;
+    --bg3: #1A1A1E;
+    --card: #1E1E23;
+    --border: rgba(255,255,255,0.08);
+    --accent: #FF5C35;
+    --text: #F2F1EE;
+    --muted: #8A8994;
+    --muted2: #5A5A65;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---- NAVBAR ---- */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,13,15,0.92);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .logo-pulse { color: var(--text); }
+  .logo-vote { color: var(--accent); }
+
+  .nav-actions { display: flex; gap: 12px; }
+  .btn-outline { padding: 8px 18px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; }
+
+  /* ---- FORM CONTAINER ---- */
+  .create-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+
+  .create-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 600px;
+    padding: 48px;
+  }
+
+  .create-header { margin-bottom: 40px; }
+  .create-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .create-header p { color: var(--muted); font-size: 14px; }
+
+  /* ---- FORM ELEMENTS ---- */
+  form { display: flex; flex-direction: column; gap: 24px; }
+
+  .input-group { display: flex; flex-direction: column; gap: 8px; }
+  .input-group label { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .field-wrap {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    transition: border-color 0.2s;
+  }
+  .field-wrap:focus-within { border-color: rgba(255,92,53,0.4); }
+
+  .field-wrap input, .field-wrap select, .field-wrap textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+  }
+  .field-wrap textarea { min-height: 80px; resize: none; }
+
+  /* Options List */
+  .options-list { display: flex; flex-direction: column; gap: 12px; }
+  .option-item { display: flex; gap: 10px; align-items: center; }
+  .option-input { flex: 1; }
+  
+  .btn-remove {
+    background: transparent;
+    border: none;
+    color: var(--muted2);
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s;
+  }
+  .btn-remove:hover { color: #FF6060; }
+
+  .btn-add-option {
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-add-option:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-submit {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: opacity 0.2s;
+  }
+  .btn-submit:hover { opacity: 0.9; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="homepage.html" class="logo">
+    <span class="logo-dot"></span>
+    <span class="logo-pulse">Pulse</span><span class="logo-vote">Vote</span>
+  </a>
+  <div class="nav-actions">
+    <a href="login.html"><button class="btn-outline">connexion</button></a>
+  </div>
+</nav>
+
+<div class="create-wrapper">
+  <div class="create-card">
+    <div class="create-header">
+      <h1>Créer un sondage</h1>
+      <p>Lancez une nouvelle discussion et récoltez des avis en temps réel.</p>
+    </div>
+
+    <form onsubmit="event.preventDefault();">
+      <!-- Question -->
+      <div class="input-group">
+        <label>Votre question</label>
+        <div class="field-wrap">
+          <textarea placeholder="ex: Quel est votre langage de programmation préféré ?"></textarea>
+        </div>
+      </div>
+
+      <!-- Catégorie -->
+      <div class="input-group">
+        <label>Catégorie</label>
+        <div class="field-wrap">
+          <select>
+            <option value="tech">Technologie</option>
+            <option value="politique">Politique</option>
+            <option value="sport">Sport</option>
+            <option value="culture">Culture</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="input-group">
+        <label>Options de réponse</label>
+        <div class="options-list" id="optionsList">
+          <div class="option-item">
+            <div class="field-wrap option-input">
+              <input type="text" placeholder="Option 1">
+            </div>
+          </div>
+          <div class="option-item">
+            <div class="field-wrap option-input">
+              <input type="text" placeholder="Option 2">
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-add-option" onclick="addOption()">
+          <i class="ti ti-plus"></i> Ajouter une option
+        </button>
+      </div>
+
+      <button type="submit" class="btn-submit">Publier le sondage</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function addOption() {
+    const container = document.getElementById('optionsList');
+    const count = container.children.length + 1;
+    
+    const div = document.createElement('div');
+    div.className = 'option-item';
+    div.innerHTML = `
+      <div class="field-wrap option-input">
+        <input type="text" placeholder="Option ${count}">
+      </div>
+      <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+        <i class="ti ti-x"></i>
+      </button>
+    `;
+    container.appendChild(div);
+  }
+</script>
+
+</body>
+</html>
