@@ -18,6 +18,12 @@ public class SondageServiceImpl implements SondageService {
 
     
     public Sondage createSondage(Sondage sondage) {
+        if (sondage.getOptions() != null) {
+            sondage.getOptions().forEach(option -> option.setSondage(sondage));
+        }
+        if (sondage.getCreat_at() == null) {
+            sondage.setCreat_at(java.time.LocalDateTime.now());
+        }
         return sondageRepository.save(sondage);
     }
     public List<Sondage> getAllSondages() {
