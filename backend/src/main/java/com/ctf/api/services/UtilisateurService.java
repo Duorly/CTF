@@ -20,5 +20,7 @@ public interface UtilisateurService {
 	void deleteUtilisateurByEmail(String email);
 
 	void deleteUtilisateurById(Long id);
+	
+	Utilisateur login(String email, String password);
 
 }
