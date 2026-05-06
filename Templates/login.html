@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulseVote — Connexion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D0D0F;
+    --bg2: #141416;
+    --bg3: #1A1A1E;
+    --card: #1E1E23;
+    --border: rgba(255,255,255,0.08);
+    --accent: #FF5C35;
+    --text: #F2F1EE;
+    --muted: #8A8994;
+    --muted2: #5A5A65;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+  .logo-pulse { color: var(--text); }
+  .logo-vote { color: var(--accent); }
+
+  .auth-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    margin-top: 60px;
+  }
+
+  .auth-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 440px;
+    padding: 48px;
+    position: relative;
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .auth-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .auth-header p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    padding-left: 4px;
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0 16px;
+    height: 52px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: rgba(255,92,53,0.4);
+    box-shadow: 0 0 0 4px rgba(255,92,53,0.05);
+  }
+
+  .input-wrapper i {
+    color: var(--muted2);
+    font-size: 18px;
+    margin-right: 12px;
+  }
+
+  .input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+  }
+
+  .input-wrapper input::placeholder { color: var(--muted2); }
+
+  .btn-auth {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    height: 52px;
+    font-size: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-auth:hover { opacity: 0.9; }
+  .btn-auth:active { transform: scale(0.99); }
+
+  .auth-footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .auth-footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+
+  .auth-footer a:hover { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="homepage.html" class="logo">
+    <span class="logo-dot"></span>
+    <span class="logo-pulse">Pulse</span><span class="logo-vote">Vote</span>
+  </a>
+</nav>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Bon retour !</h1>
+      <p>Connectez-vous pour continuer à voter.</p>
+    </div>
+
+    <form onsubmit="event.preventDefault();">
+      <div class="input-group">
+        <label>Email ou pseudonyme</label>
+        <div class="input-wrapper">
+          <i class="ti ti-user"></i>
+          <input type="text" placeholder="ex: alex.vidal">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <div class="input-wrapper">
+          <i class="ti ti-lock"></i>
+          <input type="password" placeholder="••••••••">
+        </div>
+      </div>
+      <button type="submit" class="btn-auth">Se connecter</button>
+    </form>
+
+    <div class="auth-footer">
+      Pas encore de compte ? <a href="register.html">S'inscrire</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
