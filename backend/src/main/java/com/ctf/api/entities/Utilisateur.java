@@ -25,7 +25,7 @@ public class Utilisateur {
 	private String nom;
 	private String prenom;
 	private String email;
-	private String mot_de_passe;
+	private String password;
 	
 	@OneToMany(mappedBy = "createur")
 	@JsonIgnore
