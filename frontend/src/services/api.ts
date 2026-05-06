@@ -34,6 +34,27 @@ const api = {
     const result = await response.json();
     return { data: result };
   },
+  delete: async <T>(endpoint: string): Promise<{ data: T }> => {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Handle 204 No Content or empty bodies
+    if (response.status === 204) {
+      return { data: {} as T };
+    }
+
+    const result = await response.json();
+    return { data: result };
+  },
 };
 
 export default api;

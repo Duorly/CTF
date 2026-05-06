@@ -76,6 +76,15 @@ export default function PollView() {
   if (loading) return <div className="loading">Chargement...</div>;
   if (!poll) return <div className="error">Sondage non trouvé</div>;
 
+  const handleCopyLink = () => {
+    const pollLink = window.location.href;
+    navigator.clipboard.writeText(pollLink).then(() => {
+      alert("Lien copié dans le presse-papier !");
+    }).catch(err => {
+      console.error("Erreur lors de la copie du lien:", err);
+    });
+  };
+
   const isAuthor = user?.id_utilisateur === poll.createur?.id_utilisateur;
   const totalVotes = poll.options.reduce((acc, opt) => acc + (opt.nbVotes || 0), 0);
 
@@ -139,6 +148,13 @@ export default function PollView() {
               </div>
               <div className="meta-pill">
                 <strong>{totalVotes}</strong>&nbsp;votes
+              </div>
+              <div className="meta-pill share-pill" onClick={handleCopyLink} title="Copier le lien">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+                Partager
               </div>
             </div>
           </div>

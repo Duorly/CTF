@@ -582,3 +582,21 @@ body {
     padding: 0 20px;
   }
 }
+.share-pill {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.share-pill:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.share-pill svg {
+  opacity: 0.8;
+}
