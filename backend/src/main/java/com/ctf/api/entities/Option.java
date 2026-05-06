@@ -35,4 +35,7 @@ public class Option {
     @JsonIgnore
     private List<Vote> votes;
 
+    public int getNbVotes() {
+        return votes != null ? votes.size() : 0;
+    }
 }

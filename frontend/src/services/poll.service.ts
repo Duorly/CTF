@@ -3,6 +3,7 @@ import api from './api';
 export type Option = {
   id_option?: number;
   label: string;
+  nbVotes?: number;
 };
 
 export type Sondage = {

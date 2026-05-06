@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { pollService, Sondage } from "../services/poll.service";
 import { useAuth } from "../context/AuthContext";
+import { voteService } from "../services/vote.service";
 import "../styles/poll-view.css";
 
 export default function PollView() {
-  const { isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [poll, setPoll] = useState<Sondage | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [hasVoted, setHasVoted] = useState(false);
+  const [isVoting, setIsVoting] = useState(false);
 
   useEffect(() => {
     const fetchPoll = async () => {
@@ -28,10 +30,22 @@ export default function PollView() {
     fetchPoll();
   }, [id]);
 
-  const handleVote = () => {
-    if (!selectedOption) return;
-    // Note: Voting logic would go here, calling a vote service
-    setHasVoted(true);
+  const handleVote = async () => {
+    if (!selectedOption || !user?.id_utilisateur) {
+      if (!isAuthenticated) alert("Vous devez être connecté pour voter.");
+      return;
+    }
+
+    setIsVoting(true);
+    try {
+      await voteService.createVote(user.id_utilisateur, selectedOption);
+      setHasVoted(true);
+    } catch (error) {
+      console.error("Erreur lors du vote:", error);
+      alert("Une erreur est survenue lors du vote.");
+    } finally {
+      setIsVoting(false);
+    }
   };
 
   if (loading) return <div className="loading">Chargement...</div>;
@@ -117,19 +131,24 @@ export default function PollView() {
 
                 <button
                   className="btn-vote"
-                  disabled={!selectedOption}
+                  disabled={!selectedOption || isVoting}
                   onClick={handleVote}
                 >
-                  Voter
+                  {isVoting ? "Envoi..." : "Voter"}
                 </button>
 
                 <p className="vote-footnote">
-                  Vote anonyme · Un seul vote autorisé
+                  Vote sécurisé · Un seul vote par utilisateur
                 </p>
               </>
             ) : (
-              <div className="vote-success">
-                Vote enregistré ! (Simulation : les résultats réels nécessitent une implémentation du service de vote)
+              <div className="vote-success-card">
+                <div className="success-icon">✓</div>
+                <h3>Merci pour votre vote !</h3>
+                <p>Votre participation a bien été enregistrée.</p>
+                <button className="btn-outline" onClick={() => setHasVoted(false)}>
+                  Voir les options (démo)
+                </button>
               </div>
             )}
           </div>
