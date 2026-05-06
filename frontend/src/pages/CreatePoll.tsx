@@ -12,7 +12,7 @@ type PollForm = {
 };
 
 export default function CreatePoll() {
-  const { isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -75,6 +75,7 @@ export default function CreatePoll() {
         titre: form.titre,
         description: form.description,
         options: cleanedOptions,
+        createur: { id_utilisateur: user?.id_utilisateur } as any,
       });
 
       alert("Sondage publié !");

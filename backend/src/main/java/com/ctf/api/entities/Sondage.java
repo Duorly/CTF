@@ -32,7 +32,6 @@ public class Sondage {
 	private String lien;
 
 	@ManyToOne
-	@JsonIgnore
 	private Utilisateur createur;
 
 	@OneToMany(mappedBy = "sondage", cascade = CascadeType.ALL, orphanRemoval = true)

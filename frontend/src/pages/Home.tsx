@@ -9,10 +9,25 @@ export default function Home() {
   const [polls, setPolls] = useState<Sondage[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"date" | "votes">("date");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  const filteredPolls = polls.filter((poll) =>
-    poll.titre.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const getPollVotes = (poll: Sondage) => 
+    poll.options.reduce((acc, opt) => acc + (opt.nbVotes || 0), 0);
+
+  const filteredPolls = polls
+    .filter((poll) =>
+      poll.titre.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === "date") {
+        comparison = new Date(a.creat_at || 0).getTime() - new Date(b.creat_at || 0).getTime();
+      } else {
+        comparison = getPollVotes(a) - getPollVotes(b);
+      }
+      return sortOrder === "asc" ? comparison : -comparison;
+    });
 
   useEffect(() => {
     const fetchPolls = async () => {
@@ -79,9 +94,28 @@ export default function Home() {
       </div>
 
       <div className="content">
-        <h2 className="polls-title">
-          {searchQuery ? `Résultats pour "${searchQuery}"` : "Sondages récents"}
-        </h2>
+        <div className="content-header">
+          <h2 className="polls-title">
+            {searchQuery ? `Résultats pour "${searchQuery}"` : "Sondages récents"}
+          </h2>
+
+          <div className="sort-controls">
+            <div className="sort-group">
+              <label>Trier par</label>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+                <option value="date">Date de création</option>
+                <option value="votes">Nombre de votants</option>
+              </select>
+            </div>
+            <div className="sort-group">
+              <label>Ordre</label>
+              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as any)}>
+                <option value="desc">Décroissant</option>
+                <option value="asc">Croissant</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
         {loading ? (
           <div className="loading">Chargement...</div>

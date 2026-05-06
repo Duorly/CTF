@@ -13,6 +13,7 @@ export type Sondage = {
   creat_at?: string;
   lien?: string;
   options: Option[];
+  createur?: { id_utilisateur: number; nom?: string; prenom?: string };
 };
 
 export const pollService = {
@@ -29,5 +30,9 @@ export const pollService = {
   getPollById: async (id: number) => {
     const response = await api.get<Sondage>(`/api/sondages/${id}`);
     return response.data;
+  },
+
+  deletePoll: async (id: number) => {
+    return api.delete(`/api/sondages/${id}`);
   }
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { pollService, Sondage } from "../services/poll.service";
 import { useAuth } from "../context/AuthContext";
 import { voteService } from "../services/vote.service";
@@ -7,6 +7,7 @@ import "../styles/poll-view.css";
 
 export default function PollView() {
   const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [poll, setPoll] = useState<Sondage | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,9 +58,25 @@ export default function PollView() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!poll?.id_sondage) return;
+    
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce sondage ? Cette action est irréversible.")) {
+      try {
+        await pollService.deletePoll(poll.id_sondage);
+        alert("Sondage supprimé avec succès.");
+        navigate("/");
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Une erreur est survenue lors de la suppression.");
+      }
+    }
+  };
+
   if (loading) return <div className="loading">Chargement...</div>;
   if (!poll) return <div className="error">Sondage non trouvé</div>;
 
+  const isAuthor = user?.id_utilisateur === poll.createur?.id_utilisateur;
   const totalVotes = poll.options.reduce((acc, opt) => acc + (opt.nbVotes || 0), 0);
 
   return (
@@ -102,7 +119,14 @@ export default function PollView() {
 
         <div className="main-col">
           <div className="poll-header-card">
-            <h1 className="poll-question">{poll.titre}</h1>
+            <div className="poll-header-top">
+              <h1 className="poll-question">{poll.titre}</h1>
+              {isAuthor && (
+                <button className="btn-delete" onClick={handleDelete}>
+                  Supprimer le sondage
+                </button>
+              )}
+            </div>
             <p className="poll-description">{poll.description}</p>
 
             <div className="poll-meta-row">
