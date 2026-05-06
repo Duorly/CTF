@@ -3,7 +3,12 @@ package com.ctf.api.services.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ctf.api.entities.Utilisateur;
@@ -11,10 +16,12 @@ import com.ctf.api.repositories.UtilisateurRepository;
 import com.ctf.api.services.UtilisateurService;
 
 @Service
+@RequiredArgsConstructor
 public class UtilisateurServiceImpl implements UtilisateurService {
 
-    @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public Utilisateur getUtilisateurById(Long id) {
@@ -28,6 +35,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public Utilisateur createUtilisateur(Utilisateur utilisateur) {
+        utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
         return utilisateurRepository.save(utilisateur);
     }
 
@@ -52,6 +60,16 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Override
     public void deleteUtilisateurById(Long id) {
         utilisateurRepository.deleteById(id);
+    }
+
+    @Override
+    public Utilisateur login(String email, String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return utilisateurRepository.findByEmail(email).orElseThrow();
     }
 
 }
