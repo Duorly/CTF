@@ -67,6 +67,11 @@ cd backend
 ```
 La console H2 sera accessible sur : `http://localhost:8080/h2-console`
 
+### 4. Documentation API (Swagger)
+Une fois l'application lancée, la documentation interactive Swagger est disponible ici :
+- **Swagger UI** : `http://localhost:8080/swagger-ui/index.html`
+- **OpenAPI JSON** : `http://localhost:8080/v3/api-docs`
+
 ### Remarques techniques
 - **Configuration** : Le fichier `application.yml` du backend importe automatiquement le fichier `.env` situé à la racine du projet.
 
