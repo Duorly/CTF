@@ -27,5 +27,11 @@ public class OptionServiceImpl implements OptionService {
     public void deleteOption(Long id) {
         optionRepository.deleteById(id);
     }
+
+    @Override
+    public void getallOptions() {
+            optionRepository.findAll();
+        
+    }
     
 }

@@ -10,4 +10,6 @@ public interface OptionService {
 
     void deleteOption(Long id);
 
+    void getallOptions();
+
 }
