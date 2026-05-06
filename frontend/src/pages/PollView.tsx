@@ -57,10 +57,10 @@ export default function PollView() {
     }
   };
 
-  const totalVotes = poll.options.reduce((acc, opt) => acc + (opt.nbVotes || 0), 0);
-
   if (loading) return <div className="loading">Chargement...</div>;
   if (!poll) return <div className="error">Sondage non trouvé</div>;
+
+  const totalVotes = poll.options.reduce((acc, opt) => acc + (opt.nbVotes || 0), 0);
 
   return (
     <>

@@ -45,6 +45,8 @@ public class SecurityConfig {
                         "/docs"
                          ).permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/sondages/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/votes/check/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
                 )
