@@ -1,7 +1,9 @@
 package com.ctf.api.web;
 
 import java.util.List;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import com.ctf.api.services.UtilisateurService;
 
 @RestController
 @RequestMapping("/api/utilisateurs")
+@Tag(name = "Utilisateurs", description = "Gestion des utilisateurs de l'application")
 public class UtilisateurController {
     
     private final UtilisateurService utilisateurService;
@@ -27,23 +30,29 @@ public class UtilisateurController {
     }
 
     @GetMapping
+    @Operation(summary = "Lister tous les utilisateurs", description = "Récupère la liste complète des utilisateurs enregistrés")
     public List<Utilisateur> getAllUtilisateurs() {
         return utilisateurService.getAllUtilisateur();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Récupérer un utilisateur par ID")
+    @ApiResponse(responseCode = "200", description = "Utilisateur trouvé")
+    @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
     public ResponseEntity<Utilisateur> getUtilisateurById(@PathVariable Long id) {
         Utilisateur utilisateur = utilisateurService.getUtilisateurById(id);
         return utilisateur != null ? ResponseEntity.ok(utilisateur) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
+    @Operation(summary = "Créer un nouvel utilisateur")
     public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) {
         Utilisateur created = utilisateurService.createUtilisateur(utilisateur);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Mettre à jour un utilisateur")
     public ResponseEntity<Utilisateur> updateUtilisateur(@PathVariable Long id, @RequestBody Utilisateur utilisateur) {
         utilisateur.setId_utilisateur(id);
         Utilisateur updated = utilisateurService.updateUtilisateur(utilisateur);
@@ -51,6 +60,7 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Supprimer un utilisateur")
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Long id) {
         utilisateurService.deleteUtilisateurById(id);
         return ResponseEntity.noContent().build();
