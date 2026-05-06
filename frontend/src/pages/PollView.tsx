@@ -1,38 +1,44 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { pollService, Sondage } from "../services/poll.service";
 import "../styles/poll-view.css";
 
-type PollOption = {
-  key: string;
-  label: string;
-  pct: number;
-  votes: number;
-};
-
-const options: PollOption[] = [
-  { key: "ChatGPT", label: "ChatGPT (OpenAI)", pct: 43, votes: 36210 },
-  { key: "Claude", label: "Claude (Anthropic)", pct: 28, votes: 23579 },
-  { key: "Gemini", label: "Gemini (Google)", pct: 17, votes: 14316 },
-  { key: "Mistral", label: "Mistral AI", pct: 6, votes: 5053 },
-  { key: "Copilot", label: "GitHub Copilot / Microsoft", pct: 4, votes: 3368 },
-  { key: "Autre", label: "Autre", pct: 2, votes: 1684 },
-];
-
 export default function PollView() {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const [poll, setPoll] = useState<Sondage | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [hasVoted, setHasVoted] = useState(false);
 
-  const selectedLabel = options.find((o) => o.key === selectedOption)?.label;
+  useEffect(() => {
+    const fetchPoll = async () => {
+      if (!id) return;
+      try {
+        const data = await pollService.getPollById(parseInt(id));
+        setPoll(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération du sondage:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPoll();
+  }, [id]);
 
   const handleVote = () => {
     if (!selectedOption) return;
+    // Note: Voting logic would go here, calling a vote service
     setHasVoted(true);
   };
+
+  if (loading) return <div className="loading">Chargement...</div>;
+  if (!poll) return <div className="error">Sondage non trouvé</div>;
 
   return (
     <>
       <nav className="main-nav">
-        <Link to="/home" className="logo">
+        <Link to="/" className="logo">
           <span className="logo-dot"></span>
           <span className="logo-pulse">Pulse</span>
           <span className="logo-vote">Vote</span>
@@ -51,20 +57,15 @@ export default function PollView() {
 
       <div className="page">
         <div className="breadcrumb">
-          <Link to="/home">Accueil</Link>
+          <Link to="/">Accueil</Link>
           <span>›</span>
-          <span className="current">Sondage #84210</span>
+          <span className="current">Sondage #{poll.id_sondage}</span>
         </div>
 
         <div className="main-col">
           <div className="poll-header-card">
-            <div className="poll-header-top">
-              <div className="category-badge">Technologie</div>
-            </div>
-
-            <h1 className="poll-question">
-              Quelle IA générative utilisez-vous le plus au quotidien ?
-            </h1>
+            <h1 className="poll-question">{poll.titre}</h1>
+            <p className="poll-description">{poll.description}</p>
 
             <div className="poll-meta-row">
               <div className="meta-pill live">
@@ -72,30 +73,27 @@ export default function PollView() {
                 En cours
               </div>
               <div className="meta-pill">
-                <strong>84 210</strong>&nbsp;votes
-              </div>
-              <div className="meta-pill">
-                Encore <strong>3 jours</strong>
+                <strong>{poll.options.length}</strong>&nbsp;options
               </div>
             </div>
           </div>
 
           <div className="vote-card">
-            <div className="vote-card-title">Votre vote</div>
+            <div className="vote-card-title">{hasVoted ? "Résultats" : "Votre vote"}</div>
 
             {!hasVoted ? (
               <>
                 <div className="vote-options">
-                  {options.map((option) => (
+                  {poll.options.map((option) => (
                     <button
-                      key={option.key}
+                      key={option.id_option}
                       type="button"
                       className={
-                        selectedOption === option.key
+                        selectedOption === option.id_option
                           ? "vote-option selected"
                           : "vote-option"
                       }
-                      onClick={() => setSelectedOption(option.key)}
+                      onClick={() => setSelectedOption(option.id_option || null)}
                     >
                       <div className="radio-ring">
                         <div className="radio-dot"></div>
@@ -118,117 +116,25 @@ export default function PollView() {
                 </p>
               </>
             ) : (
-              <>
-                <div className="vote-success">
-                  Vote enregistré ! Vous avez voté pour{" "}
-                  <strong>{selectedLabel}</strong>
-                </div>
-
-                <div className="vote-options">
-                  {options.map((option) => {
-                    const isWinner = option.key === "ChatGPT";
-                    const isVoted = option.key === selectedOption;
-
-                    return (
-                      <div
-                        key={option.key}
-                        className={
-                          isWinner
-                            ? "vote-option voted winner"
-                            : "vote-option voted"
-                        }
-                      >
-                        <div
-                          className={
-                            isWinner
-                              ? "voted-fill winner-fill"
-                              : "voted-fill"
-                          }
-                          style={{ width: `${option.pct}%` }}
-                        />
-
-                        <div className="vote-option-inner">
-                          <span
-                            className={
-                              isVoted
-                                ? "check-circle winner-check"
-                                : "check-circle"
-                            }
-                          >
-                            {isVoted ? "✓" : "○"}
-                          </span>
-
-                          <span className="opt-text">{option.label}</span>
-
-                          <span className="voted-count">
-                            {option.votes.toLocaleString("fr-FR")} votes
-                          </span>
-
-                          <span
-                            className={
-                              isWinner ? "voted-pct top" : "voted-pct"
-                            }
-                          >
-                            {option.pct}%
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
+              <div className="vote-success">
+                Vote enregistré ! (Simulation : les résultats réels nécessitent une implémentation du service de vote)
+              </div>
             )}
-          </div>
-
-          <div className="chart-card">
-            <div className="chart-header">
-              <div className="chart-title">Résultats détaillés</div>
-              <div className="chart-total">84 210 participants</div>
-            </div>
-
-            <div className="chart-bars">
-              {options.map((option) => (
-                <div className="chart-row" key={option.key}>
-                  <div className="chart-row-label">
-                    <span>{option.label}</span>
-                    <strong>{option.pct}%</strong>
-                  </div>
-
-                  <div className="chart-bar-track">
-                    <div
-                      className="chart-bar-fill"
-                      style={{ width: `${option.pct}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
         <div className="sidebar-col">
           <div className="sidebar-card">
-            <div className="sidebar-card-label">Créateur du sondage</div>
-
-            <div className="creator-profile">
-              <div className="creator-avatar-lg av-e">LM</div>
-              <div>
-                <div className="creator-name-lg">Léa Martin</div>
-                <div className="creator-handle">
-                  @leamrtn · Créé le 3 mai 2026
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="sidebar-card">
             <div className="sidebar-card-label">Partager ce sondage</div>
 
             <div className="copy-link-wrap">
               <span className="copy-link-url">
-                pulsevote.fr/s/84210-quelle-ia
+                pulsevote.fr/poll/{poll.id_sondage}
               </span>
-              <button className="copy-link-btn">Copier</button>
+              <button className="copy-link-btn" onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Lien copié !");
+              }}>Copier</button>
             </div>
           </div>
         </div>

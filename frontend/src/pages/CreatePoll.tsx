@@ -1,20 +1,22 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { pollService } from "../services/poll.service";
 import "../styles/create-poll.css";
 
 type PollForm = {
-  question: string;
-  category: string;
+  titre: string;
+  description: string;
   options: string[];
 };
 
 export default function CreatePoll() {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [form, setForm] = useState<PollForm>({
-    question: "",
-    category: "tech",
+    titre: "",
+    description: "",
     options: ["", ""],
   });
 
@@ -42,18 +44,39 @@ export default function CreatePoll() {
     });
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const cleanedOptions = form.options.filter((option) => option.trim() !== "");
+    if (!form.titre.trim()) {
+      alert("Le titre est obligatoire");
+      return;
+    }
 
-    console.log("Sondage créé :", {
-      ...form,
-      options: cleanedOptions,
-    });
+    const cleanedOptions = form.options
+      .filter((option) => option.trim() !== "")
+      .map((label) => ({ label }));
 
-    alert("Sondage publié !");
-    navigate("/");
+    if (cleanedOptions.length < 2) {
+      alert("Il faut au moins 2 options valides");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await pollService.createPoll({
+        titre: form.titre,
+        description: form.description,
+        options: cleanedOptions,
+      });
+
+      alert("Sondage publié !");
+      navigate("/");
+    } catch (error) {
+      console.error("Erreur lors de la création du sondage:", error);
+      alert("Une erreur est survenue lors de la création du sondage.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -83,35 +106,32 @@ export default function CreatePoll() {
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label htmlFor="question">Votre question</label>
+              <label htmlFor="titre">Votre question</label>
               <div className="field-wrap">
-                <textarea
-                  id="question"
+                <input
+                  type="text"
+                  id="titre"
                   placeholder="ex: Quel est votre langage de programmation préféré ?"
-                  value={form.question}
+                  value={form.titre}
                   onChange={(e) =>
-                    setForm({ ...form, question: e.target.value })
+                    setForm({ ...form, titre: e.target.value })
                   }
+                  required
                 />
               </div>
             </div>
 
             <div className="input-group">
-              <label htmlFor="category">Catégorie</label>
+              <label htmlFor="description">Description (Optionnel)</label>
               <div className="field-wrap">
-                <select
-                  id="category"
-                  value={form.category}
+                <textarea
+                  id="description"
+                  placeholder="Donnez plus de contexte à votre sondage..."
+                  value={form.description}
                   onChange={(e) =>
-                    setForm({ ...form, category: e.target.value })
+                    setForm({ ...form, description: e.target.value })
                   }
-                >
-                  <option value="tech">Technologie</option>
-                  <option value="politique">Politique</option>
-                  <option value="sport">Sport</option>
-                  <option value="culture">Culture</option>
-                  <option value="autre">Autre</option>
-                </select>
+                />
               </div>
             </div>
 
@@ -127,6 +147,7 @@ export default function CreatePoll() {
                         placeholder={`Option ${index + 1}`}
                         value={option}
                         onChange={(e) => updateOption(index, e.target.value)}
+                        required={index < 2}
                       />
                     </div>
 
@@ -147,13 +168,14 @@ export default function CreatePoll() {
                 type="button"
                 className="btn-add-option"
                 onClick={addOption}
+                disabled={isSubmitting}
               >
                 + Ajouter une option
               </button>
             </div>
 
-            <button type="submit" className="btn-submit">
-              Publier le sondage
+            <button type="submit" className="btn-submit" disabled={isSubmitting}>
+              {isSubmitting ? "Publication en cours..." : "Publier le sondage"}
             </button>
           </form>
         </div>
