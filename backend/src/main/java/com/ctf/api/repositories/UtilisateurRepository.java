@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ctf.api.entities.Utilisateur;
 
-public interface UtilisateurRepository extends JpaRepository<Long, Utilisateur>{
+public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long>{
 
-	Optional<Utilisateur> findByAdresseMail(String adresseMail);
+	Optional<Utilisateur> findByEmail(String email);
 
-	void deleteUtilisateurByAdresseMail(String adresseMail);
+	void deleteByEmail(String email);
 	
 
 }

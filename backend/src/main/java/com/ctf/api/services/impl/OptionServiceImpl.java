@@ -3,21 +3,23 @@ package com.ctf.api.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ctf.api.entities.Option;
+import com.ctf.api.repositories.OptionRepository;
 import com.ctf.api.services.OptionService;
 
 @Service
 public class OptionServiceImpl implements OptionService { 
 
     @Autowired 
-    private OptionService optionService;    
+    private OptionRepository optionRepository;    
 
     @Override
-    public OptionService getOptionById(Long id) {
-        return null;
+    public Option getOptionById(Long id) {
+        return optionRepository.findById(id).orElse(null);
     }
-    @Override
-    public OptionService createOption(OptionService option) {
-        return option;
 
-}
+    @Override
+    public Option createOption(Option option) {
+        return optionRepository.save(option);
+    }
 }

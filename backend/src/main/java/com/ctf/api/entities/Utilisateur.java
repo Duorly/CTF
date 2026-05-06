@@ -19,7 +19,7 @@ public class Utilisateur {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id_utilisateur;
 	private String nom;
-	private String preneom;
+	private String prenom;
 	private String email;
 	private String mot_de_passe;
 	

@@ -1,9 +1,11 @@
 package com.ctf.api.services;
 
+import com.ctf.api.entities.Option;
+
 public interface OptionService {
 
-    OptionService getOptionById(Long id);
+    Option getOptionById(Long id);
 
-    OptionService createOption(OptionService option);
+    Option createOption(Option option);
 
 }
