@@ -1,0 +1,162 @@
+/* RESET */
+*, *::before, *::after {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+/* VARIABLES */
+:root {
+--bg: #0D0D0F;
+--bg2: #141416;
+--bg3: #1A1A1E;
+--card: #1E1E23;
+--border: rgba(255,255,255,0.08);
+--accent: #FF5C35;
+--text: #F2F1EE;
+--muted: #8A8994;
+}
+
+/* GLOBAL */
+body {
+background: var(--bg);
+color: var(--text);
+font-family: 'DM Sans', sans-serif;
+}
+
+/* NAVBAR */
+.main-nav {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 48px;
+height: 68px;
+border-bottom: 1px solid var(--border);
+position: sticky;
+top: 0;
+background: rgba(13,13,15,0.92);
+}
+
+/* LOGO */
+.logo {
+font-family: 'Syne', sans-serif;
+font-weight: 800;
+font-size: 22px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.logo-dot {
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: var(--accent);
+}
+
+.logo-pulse {
+color: var(--text);
+}
+
+.logo-vote {
+color: var(--accent);
+}
+
+/* NAV ACTIONS */
+.nav-actions {
+display: flex;
+gap: 12px;
+}
+
+.btn-outline {
+padding: 8px 16px;
+border: 1px solid var(--border);
+border-radius: 8px;
+background: transparent;
+color: var(--muted);
+cursor: pointer;
+}
+
+.btn-solid {
+padding: 8px 16px;
+border-radius: 8px;
+background: var(--accent);
+color: #fff;
+border: none;
+cursor: pointer;
+}
+
+/* HERO */
+.hero {
+padding: 60px 48px;
+}
+
+.hero h1 {
+font-family: 'Syne', sans-serif;
+font-size: 48px;
+margin-bottom: 20px;
+}
+
+.hero em {
+color: var(--accent);
+}
+
+/* SEARCH */
+.search-wrap {
+display: flex;
+gap: 10px;
+max-width: 400px;
+}
+
+.search-wrap input {
+flex: 1;
+padding: 10px;
+border-radius: 8px;
+border: 1px solid var(--border);
+background: var(--bg3);
+color: var(--text);
+}
+
+.btn-search {
+padding: 10px 16px;
+border-radius: 8px;
+background: var(--accent);
+color: white;
+border: none;
+cursor: pointer;
+}
+
+/* CONTENT */
+.content {
+padding: 40px 48px;
+}
+
+.polls-title {
+font-size: 20px;
+margin-bottom: 20px;
+}
+
+/* GRID */
+.polls-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 16px;
+}
+
+/* CARD */
+.poll-card {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 20px;
+}
+
+.poll-title {
+font-weight: 600;
+margin-bottom: 10px;
+}
+
+.poll-votes {
+color: var(--muted);
+font-size: 14px;
+}
