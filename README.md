@@ -22,7 +22,6 @@ L’application est utilisable directement depuis un navigateur, sans installati
 - Youcef : Dev 
 - Ye     : Dev 
 - Astrid : Dev
-- N'Nebie: Dev
 
 ## MVP
 
