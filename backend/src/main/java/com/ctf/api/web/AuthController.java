@@ -27,12 +27,19 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        System.out.println("Tentative de connexion pour: " + request.getEmail());
         try {
             Utilisateur utilisateur = utilisateurService.login(request.getEmail(), request.getPassword());
             securityContextRepository.saveContext(SecurityContextHolder.getContext(), httpRequest, httpResponse);
+            System.out.println("Connexion réussie pour: " + request.getEmail());
             return ResponseEntity.ok(utilisateur);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants invalides");
+            System.out.println("Échec de connexion pour: " + request.getEmail() + " - Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants invalides: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue lors de la connexion: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur interne");
         }
     }
 

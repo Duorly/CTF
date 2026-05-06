@@ -80,7 +80,15 @@ export default function Home() {
       </nav>
 
       <div className="hero">
-        <div className="hero-tag">Plateforme de sondage en temps réel</div>
+        <div className="hero-tag-row">
+          <div className="hero-tag">Plateforme de sondage en temps réel</div>
+          {stats && (
+            <div className="meta-pill live">
+              <span className="live-dot"></span>
+              <strong>{stats.totalVotes.toLocaleString()}</strong>&nbsp;votes enregistrés
+            </div>
+          )}
+        </div>
 
         <h1>
           Donnez votre
@@ -99,25 +107,19 @@ export default function Home() {
       </div>
 
       <div className="content">
-        {stats && (
-          <div className="stats-container">
-            <div className="stats-card">
-              <div className="stats-icon">🗳️</div>
-              <div className="stats-content">
-                <div className="stats-label">Total de votes</div>
-                <div className="stats-value">{stats.totalVotes.toLocaleString()}</div>
+        {stats && stats.mostPopularPollId && (
+          <div className="featured-section">
+            <h2 className="section-title">À ne pas manquer</h2>
+            <Link to={`/poll/${stats.mostPopularPollId}`} className="poll-card featured">
+              <div className="featured-badge">Sondage le plus populaire</div>
+              <div className="poll-title">{stats.mostPopularPollTitle}</div>
+              <div className="poll-info">
+                <span className="poll-votes-count">
+                  <strong>{stats.mostPopularPollVotes}</strong> votes au total
+                </span>
+                <span className="poll-action-link">Participer maintenant →</span>
               </div>
-            </div>
-            {stats.mostPopularPollId && (
-              <Link to={`/poll/${stats.mostPopularPollId}`} className="stats-card highlight">
-                <div className="stats-icon">🔥</div>
-                <div className="stats-content">
-                  <div className="stats-label">Sondage le plus populaire</div>
-                  <div className="stats-value">{stats.mostPopularPollTitle}</div>
-                  <div className="stats-subtext">{stats.mostPopularPollVotes} votes cumulés</div>
-                </div>
-              </Link>
-            )}
+            </Link>
           </div>
         )}
 

@@ -35,6 +35,9 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public Utilisateur createUtilisateur(Utilisateur utilisateur) {
+        if (utilisateurRepository.findByEmail(utilisateur.getEmail()).isPresent()) {
+            throw new RuntimeException("Cet email est déjà utilisé.");
+        }
         utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
         return utilisateurRepository.save(utilisateur);
     }

@@ -28,6 +28,7 @@ public class Utilisateur implements Serializable {
 	private Long id_utilisateur;
 	private String nom;
 	private String prenom;
+	@jakarta.persistence.Column(unique = true)
 	private String email;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
