@@ -3,34 +3,42 @@ import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/auth.css";
 
+import { useAuth } from "../context/AuthContext";
+
 type RegisterForm = {
-nom: string;
-prenom: string;
-email: string;
-password: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  password: string;
 };
 
 export default function Register() {
-const [form, setForm] = useState<RegisterForm>({
-nom: "",
-prenom: "",
-email: "",
-password: "",
-});
+  const [form, setForm] = useState<RegisterForm>({
+    nom: "",
+    prenom: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { register } = useAuth();
 
-const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-event.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
 
-console.log("Inscription :", form);
-
-alert("Register success!");
-
-navigate("/login");
-
-
-};
+    try {
+      await register(form);
+      navigate("/login");
+    } catch (err: any) {
+      setError("Une erreur est survenue lors de l'inscription.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 return (
 <> <nav className="auth-nav"> <Link to="/" className="logo"> <span className="logo-dot"></span> <span className="logo-pulse">Pulse</span> <span className="logo-vote">Vote</span> </Link> </nav>
@@ -41,6 +49,8 @@ return (
         <h1>Créer un compte</h1>
         <p>Rejoignez la communauté PulseVote.</p>
       </div>
+
+      {error && <div className="auth-error">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
@@ -99,8 +109,8 @@ return (
           </div>
         </div>
 
-        <button type="submit" className="btn-auth">
-          Créer mon compte
+        <button type="submit" className="btn-auth" disabled={loading}>
+          {loading ? "Création..." : "Créer mon compte"}
         </button>
       </form>
 

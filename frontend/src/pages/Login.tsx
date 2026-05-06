@@ -3,6 +3,8 @@ import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/auth.css";
 
+import { useAuth } from "../context/AuthContext";
+
 type LoginForm = {
   identifier: string;
   password: string;
@@ -13,16 +15,25 @@ export default function Login() {
     identifier: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError("");
+    setLoading(true);
 
-    console.log("Connexion :", form);
-
-    alert("Login success!");
-    navigate("/");
+    try {
+      await login({ email: form.identifier, password: form.password });
+      navigate("/");
+    } catch (err: any) {
+      setError("Email ou mot de passe incorrect.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +52,8 @@ export default function Login() {
             <h1>Bon retour !</h1>
             <p>Connectez-vous pour continuer à voter.</p>
           </div>
+
+          {error && <div className="auth-error">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
@@ -73,8 +86,8 @@ export default function Login() {
               </div>
             </div>
 
-            <button type="submit" className="btn-auth">
-              Se connecter
+            <button type="submit" className="btn-auth" disabled={loading}>
+              {loading ? "Connexion..." : "Se connecter"}
             </button>
           </form>
 
