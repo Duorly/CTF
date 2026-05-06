@@ -396,33 +396,60 @@ body {
   margin-bottom: 24px;
 }
 
-.chart-header {
+.results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-info {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 28px;
+  align-items: center;
+  font-size: 14px;
 }
 
-.chart-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
+.result-label {
+  font-weight: 500;
+  color: var(--text);
 }
 
-.chart-total {
-  font-size: 13px;
+.result-count {
   color: var(--muted);
+  font-size: 13px;
 }
 
-.chart-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+.result-bar-bg {
+  height: 12px;
+  background: var(--bg3);
+  border-radius: 100px;
+  overflow: hidden;
+  border: 1px solid var(--border);
 }
 
-.chart-row {
+.result-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 100px;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.results-footer {
+  margin-top: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 7px;
+  justify-content: center;
 }
 
 .chart-row-label {

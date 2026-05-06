@@ -15,8 +15,19 @@ public class VoteServiceImpl implements VoteService {
     @Autowired
     private VoteRepository voteRepository;
 
+    @Autowired
+    private com.ctf.api.repositories.OptionRepository optionRepository;
+
     @Override
     public Vote createVote(Vote vote) {
+        // Récupérer l'option complète pour avoir le sondage associé
+        com.ctf.api.entities.Option option = optionRepository.findById(vote.getOptionChosen().getId_option())
+                .orElseThrow(() -> new RuntimeException("Option non trouvée"));
+        
+        if (hasUserVoted(vote.getVoter().getId_utilisateur(), option.getSondage().getId_sondage())) {
+            throw new RuntimeException("L'utilisateur a déjà voté pour ce sondage.");
+        }
+        
         return voteRepository.save(vote);
     }
 
@@ -35,4 +46,8 @@ public class VoteServiceImpl implements VoteService {
         voteRepository.deleteById(id);
     }
 
+    @Override
+    public boolean hasUserVoted(Long userId, Long pollId) {
+        return voteRepository.existsByUserIdAndPollId(userId, pollId);
+    }
 }

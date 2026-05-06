@@ -8,6 +8,11 @@ export default function Home() {
   const { isAuthenticated, logout } = useAuth();
   const [polls, setPolls] = useState<Sondage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredPolls = polls.filter((poll) =>
+    poll.titre.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     const fetchPolls = async () => {
@@ -64,30 +69,43 @@ export default function Home() {
         </h1>
 
         <div className="search-wrap">
-          <input placeholder="Rechercher un sondage…" />
+          <input 
+            placeholder="Rechercher un sondage…" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           <button className="btn-search">Rechercher</button>
         </div>
       </div>
 
       <div className="content">
-        <h2 className="polls-title">Sondages récents</h2>
+        <h2 className="polls-title">
+          {searchQuery ? `Résultats pour "${searchQuery}"` : "Sondages récents"}
+        </h2>
 
         {loading ? (
           <div className="loading">Chargement...</div>
         ) : (
           <div className="polls-grid">
-            {polls.length > 0 ? (
-              polls.map((poll) => (
+            {filteredPolls.length > 0 ? (
+              filteredPolls.map((poll) => (
                 <Link key={poll.id_sondage} to={`/poll/${poll.id_sondage}`} className="poll-card">
                   <div className="poll-title">{poll.titre}</div>
                   <div className="poll-description">{poll.description}</div>
                   <div className="poll-info">
                     <span className="poll-options-count">{poll.options.length} options</span>
+                    <span className="poll-votes-count">
+                      {poll.options.reduce((acc, opt) => acc + (opt.nbVotes || 0), 0)} votes
+                    </span>
                   </div>
                 </Link>
               ))
             ) : (
-              <div className="no-polls">Aucun sondage disponible pour le moment.</div>
+              <div className="no-polls">
+                {searchQuery 
+                  ? `Aucun sondage ne correspond à "${searchQuery}"` 
+                  : "Aucun sondage disponible pour le moment."}
+              </div>
             )}
           </div>
         )}

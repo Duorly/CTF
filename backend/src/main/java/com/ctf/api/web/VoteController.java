@@ -53,4 +53,10 @@ public class VoteController {
         voteService.deleteVote(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/check/{userId}/{pollId}")
+    @Operation(summary = "Vérifier si un utilisateur a déjà voté pour un sondage")
+    public ResponseEntity<Boolean> hasVoted(@PathVariable Long userId, @PathVariable Long pollId) {
+        return ResponseEntity.ok(voteService.hasUserVoted(userId, pollId));
+    }
 }

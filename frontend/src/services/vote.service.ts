@@ -17,5 +17,10 @@ export const voteService = {
 
   getAllVotes: async () => {
     return api.get<Vote[]>("/api/votes");
+  },
+
+  checkUserVote: async (userId: number, pollId: number) => {
+    const response = await api.get<boolean>(`/api/votes/check/${userId}/${pollId}`);
+    return response.data;
   }
 };

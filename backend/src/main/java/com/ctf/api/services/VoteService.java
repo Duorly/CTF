@@ -9,4 +9,5 @@ public interface VoteService {
     List<Vote> getAllVotes();
     Vote getVoteById(Long id);
     void deleteVote(Long id);
+    boolean hasUserVoted(Long userId, Long pollId);
 }
