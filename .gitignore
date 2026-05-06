@@ -7,6 +7,9 @@
 # Build
 /target/
 *.log
+maven-repo/
+maven-user-home/
+.m2/
 
 # IDE
 *.iml
