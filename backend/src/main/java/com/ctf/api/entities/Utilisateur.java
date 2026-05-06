@@ -1,5 +1,9 @@
 package com.ctf.api.entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +27,12 @@ public class Utilisateur {
 	private String email;
 	private String mot_de_passe;
 	
+	@OneToMany(mappedBy = "createur")
+	@JsonIgnore
+	private List<Sondage> sondages;
 
+	@OneToMany(mappedBy = "voter")
+	@JsonIgnore
+	private List<Vote> votes;
 
 }
