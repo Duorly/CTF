@@ -44,12 +44,6 @@ public class UtilisateurController {
         return utilisateur != null ? ResponseEntity.ok(utilisateur) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping
-    @Operation(summary = "Créer un nouvel utilisateur")
-    public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) {
-        Utilisateur created = utilisateurService.createUtilisateur(utilisateur);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
 
     @PutMapping("/{id}")
     @Operation(summary = "Mettre à jour un utilisateur")

@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ctf.api.dto.RegisterRequest;
 import com.ctf.api.entities.Utilisateur;
 import com.ctf.api.repositories.UtilisateurRepository;
 import com.ctf.api.services.UtilisateurService;
@@ -34,8 +35,13 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public Utilisateur createUtilisateur(Utilisateur utilisateur) {
-        utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
+    public Utilisateur createUtilisateur(RegisterRequest request) {
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setNom(request.getNom());
+        utilisateur.setPrenom(request.getPrenom());
+        utilisateur.setEmail(request.getEmail());
+        utilisateur.setPassword(passwordEncoder.encode(request.getPassword()));
+        
         return utilisateurRepository.save(utilisateur);
     }
 

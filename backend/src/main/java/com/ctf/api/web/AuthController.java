@@ -1,6 +1,7 @@
 package com.ctf.api.web;
 
 import com.ctf.api.dto.LoginRequest;
+import com.ctf.api.dto.RegisterRequest;
 import com.ctf.api.entities.Utilisateur;
 import com.ctf.api.services.UtilisateurService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Utilisateur> register(@RequestBody Utilisateur utilisateur) {
+    public ResponseEntity<Utilisateur> register(@RequestBody RegisterRequest utilisateur) {
         Utilisateur created = utilisateurService.createUtilisateur(utilisateur);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }

@@ -3,6 +3,7 @@ package com.ctf.api.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.ctf.api.dto.RegisterRequest;
 import com.ctf.api.entities.Utilisateur;
 
 public interface UtilisateurService {
@@ -11,7 +12,7 @@ public interface UtilisateurService {
 
 	Optional<Utilisateur> getUtilisateurByEmail(String email);
 
-	Utilisateur createUtilisateur(Utilisateur utilisateur);
+	Utilisateur createUtilisateur(RegisterRequest request);
 
 	Utilisateur updateUtilisateur(Utilisateur utilisateur);
 
