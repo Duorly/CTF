@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { pollService } from "../services/poll.service";
@@ -12,9 +12,15 @@ type PollForm = {
 };
 
 export default function CreatePoll() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
 
   const [form, setForm] = useState<PollForm>({
     titre: "",
@@ -91,7 +97,9 @@ export default function CreatePoll() {
         </Link>
 
         <div className="nav-actions">
-          {!isAuthenticated && (
+          {isAuthenticated ? (
+            <button className="btn-outline" onClick={logout}>Déconnexion</button>
+          ) : (
             <Link to="/login">
               <button className="btn-outline">Connexion</button>
             </Link>

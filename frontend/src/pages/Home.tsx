@@ -34,15 +34,23 @@ export default function Home() {
         </div>
 
         <div className="nav-actions">
-          {!isAuthenticated && (
-            <Link to="/login">
-              <button className="btn-outline">Connexion</button>
-            </Link>
+          {!isAuthenticated ? (
+            <>
+              <Link to="/register">
+                <button className="btn-outline">Inscription</button>
+              </Link>
+              <Link to="/login">
+                <button className="btn-solid">Connexion</button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/create-poll">
+                <button className="btn-outline">Créer un sondage</button>
+              </Link>
+              <button className="btn-solid" onClick={logout}>Déconnexion</button>
+            </>
           )}
-
-          <Link to="/create-poll">
-            <button className="btn-solid">Créer un sondage</button>
-          </Link>
         </div>
       </nav>
 
