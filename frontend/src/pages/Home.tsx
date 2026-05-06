@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import "../styles/home.css";
 
 export default function Home() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [polls, setPolls] = useState<Sondage[]>([]);
   const [loading, setLoading] = useState(true);
 
