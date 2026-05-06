@@ -22,4 +22,10 @@ public class OptionServiceImpl implements OptionService {
     public Option createOption(Option option) {
         return optionRepository.save(option);
     }
+
+    @Override
+    public void deleteOption(Long id) {
+        optionRepository.deleteById(id);
+    }
+    
 }
