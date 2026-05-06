@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { pollService, Sondage } from "../services/poll.service";
+import { pollService, Sondage, Stats } from "../services/poll.service";
 import { useAuth } from "../context/AuthContext";
 import "../styles/home.css";
 
 export default function Home() {
   const { isAuthenticated, logout } = useAuth();
   const [polls, setPolls] = useState<Sondage[]>([]);
+  const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "votes">("date");
@@ -30,18 +31,22 @@ export default function Home() {
     });
 
   useEffect(() => {
-    const fetchPolls = async () => {
+    const fetchData = async () => {
       try {
-        const data = await pollService.getAllPolls();
-        setPolls(data);
+        const [pollsData, statsData] = await Promise.all([
+          pollService.getAllPolls(),
+          pollService.getStats()
+        ]);
+        setPolls(pollsData);
+        setStats(statsData);
       } catch (error) {
-        console.error("Erreur lors de la récupération des sondages:", error);
+        console.error("Erreur lors de la récupération des données:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPolls();
+    fetchData();
   }, []);
 
   return (
@@ -94,6 +99,28 @@ export default function Home() {
       </div>
 
       <div className="content">
+        {stats && (
+          <div className="stats-container">
+            <div className="stats-card">
+              <div className="stats-icon">🗳️</div>
+              <div className="stats-content">
+                <div className="stats-label">Total de votes</div>
+                <div className="stats-value">{stats.totalVotes.toLocaleString()}</div>
+              </div>
+            </div>
+            {stats.mostPopularPollId && (
+              <Link to={`/poll/${stats.mostPopularPollId}`} className="stats-card highlight">
+                <div className="stats-icon">🔥</div>
+                <div className="stats-content">
+                  <div className="stats-label">Sondage le plus populaire</div>
+                  <div className="stats-value">{stats.mostPopularPollTitle}</div>
+                  <div className="stats-subtext">{stats.mostPopularPollVotes} votes cumulés</div>
+                </div>
+              </Link>
+            )}
+          </div>
+        )}
+
         <div className="content-header">
           <h2 className="polls-title">
             {searchQuery ? `Résultats pour "${searchQuery}"` : "Sondages récents"}

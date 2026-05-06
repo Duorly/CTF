@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
 import com.ctf.api.entities.Sondage;
 import com.ctf.api.repositories.SondageRepository;
 
@@ -32,8 +35,15 @@ public class SondageServiceImpl implements SondageService {
     public Sondage getSondageById(Long id) {
         return sondageRepository.findById(id).orElse(null);
     }
-    public void deleteSondage(Long id) {
-        sondageRepository.deleteById(id);
+    public void deleteSondage(Long id, Long userId) {
+        Sondage sondage = sondageRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sondage non trouvé"));
+            
+        if (sondage.getCreateur() == null || !sondage.getCreateur().getId_utilisateur().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à supprimer ce sondage");
+        }
+        
+        sondageRepository.delete(sondage);
     }
 
 }

@@ -9,5 +9,5 @@ public interface SondageService {
     Sondage createSondage(Sondage sondage);
     List<Sondage> getAllSondages();
     Sondage getSondageById(Long id);
-    void deleteSondage(Long id);    
+    void deleteSondage(Long id, Long userId);    
 }

@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.ctf.api.security.UserPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,8 +51,9 @@ public class SondageController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Supprimer un sondage")
-    public ResponseEntity<Void> deleteSondage(@PathVariable Long id) {
-        sondageService.deleteSondage(id);
+    public ResponseEntity<Void> deleteSondage(@PathVariable Long id, Authentication authentication) {
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        sondageService.deleteSondage(id, principal.getUser().getId_utilisateur());
         return ResponseEntity.noContent().build();
     }
 }

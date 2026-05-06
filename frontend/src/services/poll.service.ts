@@ -16,7 +16,19 @@ export type Sondage = {
   createur?: { id_utilisateur: number; nom?: string; prenom?: string };
 };
 
+export type Stats = {
+  totalVotes: number;
+  mostPopularPollTitle: string;
+  mostPopularPollVotes: number;
+  mostPopularPollId: number | null;
+};
+
 export const pollService = {
+  getStats: async () => {
+    const response = await api.get<Stats>('/api/stats');
+    return response.data;
+  },
+
   getAllPolls: async () => {
     const response = await api.get<Sondage[]>('/api/sondages');
     return response.data;
