@@ -1,5 +1,7 @@
 package com.ctf.api.services;
 
+import java.util.List;
+
 import com.ctf.api.entities.Option;
 
 public interface OptionService {
@@ -10,6 +12,6 @@ public interface OptionService {
 
     void deleteOption(Long id);
 
-    void getallOptions();
+    List<Option> getAllOptions();
 
 }

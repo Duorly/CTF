@@ -1,6 +1,7 @@
 package com.ctf.api.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,35 +18,40 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public Utilisateur getUtilisateurById(Long id) {
-        return null;
+        return utilisateurRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Utilisateur getUtilisateurByEmail(String adresseMail) {
-        return null;
+    public Optional<Utilisateur> getUtilisateurByEmail(String email) {
+        return utilisateurRepository.findByEmail(email);
     }
 
     @Override
     public Utilisateur createUtilisateur(Utilisateur utilisateur) {
-        return null;
+        return utilisateurRepository.save(utilisateur);
     }
 
     @Override
     public Utilisateur updateUtilisateur(Utilisateur utilisateur) {
+        if (utilisateur.getId_utilisateur() != null && utilisateurRepository.existsById(utilisateur.getId_utilisateur())) {
+            return utilisateurRepository.save(utilisateur);
+        }
         return null;
     }
 
     @Override
     public List<Utilisateur> getAllUtilisateur() {
-        return null;
+        return utilisateurRepository.findAll();
     }
 
     @Override
-    public void deleteUtilisateurByEmail(String adresseMail) {
+    public void deleteUtilisateurByEmail(String email) {
+        utilisateurRepository.deleteByEmail(email);
     }
 
     @Override
-    public void deleteUtilisateurById(Long id) {        
+    public void deleteUtilisateurById(Long id) {
+        utilisateurRepository.deleteById(id);
     }
 
 }

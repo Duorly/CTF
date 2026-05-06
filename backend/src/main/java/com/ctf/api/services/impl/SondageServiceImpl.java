@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 import com.ctf.api.entities.Sondage;
 import com.ctf.api.repositories.SondageRepository;
 
-@Service
+import com.ctf.api.services.SondageService;
 
-public class SondageServiceImpl {
+@Service
+public class SondageServiceImpl implements SondageService {
     @Autowired
     private SondageRepository sondageRepository;
 

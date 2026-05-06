@@ -1,13 +1,12 @@
 package com.ctf.api.services;
 
+import java.util.List;
 import com.ctf.api.entities.Vote;
 
 public interface VoteService {
 
-        void createVote();
-        void getVoteById();
-        void getallVotes();
-        void deleteVote(Long id);
-        Vote getVoteById(Long id);
-        Vote createVote(Vote vote);
+    Vote createVote(Vote vote);
+    List<Vote> getAllVotes();
+    Vote getVoteById(Long id);
+    void deleteVote(Long id);
 }

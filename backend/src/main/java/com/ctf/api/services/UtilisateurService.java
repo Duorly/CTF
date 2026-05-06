@@ -1,6 +1,7 @@
 package com.ctf.api.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.ctf.api.entities.Utilisateur;
 
@@ -8,7 +9,7 @@ public interface UtilisateurService {
 
 	Utilisateur getUtilisateurById(Long id);
 
-	Utilisateur getUtilisateurByEmail(String adresseMail);
+	Optional<Utilisateur> getUtilisateurByEmail(String email);
 
 	Utilisateur createUtilisateur(Utilisateur utilisateur);
 
@@ -16,7 +17,7 @@ public interface UtilisateurService {
 
 	List<Utilisateur> getAllUtilisateur();
 
-	void deleteUtilisateurByEmail(String adresseMail);
+	void deleteUtilisateurByEmail(String email);
 
 	void deleteUtilisateurById(Long id);
 

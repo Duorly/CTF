@@ -1,5 +1,6 @@
 package com.ctf.api.services.impl;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,8 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public void getallOptions() {
-            optionRepository.findAll();
-        
+    public List<Option> getAllOptions() {
+        return optionRepository.findAll();
     }
     
 }
