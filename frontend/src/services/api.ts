@@ -4,6 +4,7 @@ const api = {
   get: async <T>(endpoint: string): Promise<{ data: T }> => {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -19,6 +20,7 @@ const api = {
   post: async <T>(endpoint: string, data: any): Promise<{ data: T }> => {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },

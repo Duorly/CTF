@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { pollService, Sondage } from "../services/poll.service";
+import { useAuth } from "../context/AuthContext";
 import "../styles/home.css";
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
   const [polls, setPolls] = useState<Sondage[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,9 +34,11 @@ export default function Home() {
         </div>
 
         <div className="nav-actions">
-          <Link to="/login">
-            <button className="btn-outline">Connexion</button>
-          </Link>
+          {!isAuthenticated && (
+            <Link to="/login">
+              <button className="btn-outline">Connexion</button>
+            </Link>
+          )}
 
           <Link to="/create-poll">
             <button className="btn-solid">Créer un sondage</button>

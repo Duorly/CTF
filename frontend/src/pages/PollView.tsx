@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { pollService, Sondage } from "../services/poll.service";
+import { useAuth } from "../context/AuthContext";
 import "../styles/poll-view.css";
 
 export default function PollView() {
+  const { isAuthenticated } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [poll, setPoll] = useState<Sondage | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,9 +47,11 @@ export default function PollView() {
         </Link>
 
         <div className="nav-actions">
-          <Link to="/login">
-            <button className="btn-outline">Connexion</button>
-          </Link>
+          {!isAuthenticated && (
+            <Link to="/login">
+              <button className="btn-outline">Connexion</button>
+            </Link>
+          )}
 
           <Link to="/create-poll">
             <button className="btn-solid">Créer un sondage</button>

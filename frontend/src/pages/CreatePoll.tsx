@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { pollService } from "../services/poll.service";
+import { useAuth } from "../context/AuthContext";
 import "../styles/create-poll.css";
 
 type PollForm = {
@@ -11,6 +12,7 @@ type PollForm = {
 };
 
 export default function CreatePoll() {
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -89,9 +91,11 @@ export default function CreatePoll() {
         </Link>
 
         <div className="nav-actions">
-          <Link to="/login">
-            <button className="btn-outline">connexion</button>
-          </Link>
+          {!isAuthenticated && (
+            <Link to="/login">
+              <button className="btn-outline">Connexion</button>
+            </Link>
+          )}
         </div>
       </nav>
 
